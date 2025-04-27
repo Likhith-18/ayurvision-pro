@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+langchain
+langchain-community
+llama-index
+llama-parse 
+fastembed
+qdrant_client
+python-dotenv
+langchain-groq
+chainlit==1.0.504
+unstructured[md]
+tensorflow==2.15.0

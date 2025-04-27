@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - .venv:/app/.venv
+    # depends_on:
+    #   - chatbot
+    networks:
+      - my_network
+
+  # chatbot:
+  #   build:
+  #     context: ./server/rag-chatbot
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - .venv:/app/.venv
+  #   networks:
+  #     - my_network
+
+networks:
+  my_network:
+    driver: bridge
+# version: "3"
+# services:
+#   server:
+#     build:
+#       context: ./server
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3000:3000"
+#     volumes:
+#       - .:/app
+#     depends_on:
+#       - chainlit
+#       - frontend
+
+#   chainlit:
+#     build:
+#       context: ./rag-chatbot
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8501:8501"
+#     volumes:
+#       - .:/app
+
+#   frontend:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     ports:
+#       - "80:80"
+#     depends_on:
+#       - server

@@ -1,0 +1,9 @@
+fastapi[all]
+uvicorn
+langchain
+langchain-community
+langchain-groq
+fastembed
+qdrant_client
+python-dotenv
+chainlit==1.3.2
