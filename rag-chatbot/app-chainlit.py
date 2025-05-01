@@ -4,10 +4,14 @@
 # https://docs.chainlit.io/integrations/langchain
 from dotenv import load_dotenv
 from langchain.chains import RetrievalQA
+from langchain_community.chat_message_histories import ChatMessageHistory
+from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_models import ChatOllama
 from qdrant_client import QdrantClient
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 from langchain_community.vectorstores import Qdrant
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+# from langchain_qdrant import Qdrant
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 import os
@@ -15,6 +19,9 @@ import chainlit as cl
 from config import config
 # bring in our GROQ_API_KEY
 load_dotenv()
+
+chat_histories = {}
+
 
 groq_api_key = os.getenv("GROQ_API_KEY")
 qdrant_url = os.getenv("QDRANT_URL")
@@ -63,6 +70,13 @@ Helpful answer:
 """
 
 
+def get_chat_history(session_id):
+    if session_id not in chat_histories:
+        chat_histories[session_id] = ChatMessageHistory()
+    return chat_histories[session_id]
+
+
+
 def set_custom_prompt(prakriti):
     """
     Prompt template for QA retrieval for each vectorstore
@@ -80,19 +94,19 @@ def set_custom_prompt(prakriti):
     else:
         custom = custom_prompt_template
 
-    prompt = PromptTemplate(template=custom,
-                            input_variables=['context', 'question'])
+    # prompt = PromptTemplate(template=custom,
+    #                         input_variables=['context', 'question'])
     # print(custom_prompt_template)
     # print(prompt)
-    return prompt
+    return custom
 
 
-chat_model = ChatGroq(temperature=0, model_name="mixtral-8x7b-32768")
-# chat_model = ChatGroq(temperature=0, model_name="gemma-7b-it")
+# chat_model = ChatGroq(temperature=0, model_name="mixtral-8x7b-32768")
+chat_model = ChatGroq(temperature=0.5, model_name="gemma2-9b-it",streaming=True)
 # chat_model = ChatGroq(temperature=0, model_name="Llama2-70b-4096")
 # chat_model = ChatGroq(temperature=0, model_name="Llama3-70b-8192")
 # chat_model = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant")
-# chat_model = ChatGroq(temperature=0, model_name="Llama3-8b-8192")
+# chat_model = ChatGroq(temperature=0.5, model_name="Llama3-8b-8192")
 # chat_model = ChatOllama(model="llama2", request_timeout=30.0)
 
 client = QdrantClient(api_key=qdrant_api_key, url=qdrant_url,)
@@ -104,20 +118,34 @@ def retrieval_qa_chain(llm, prompt, vectorstore):
         chain_type="stuff",
         retriever=vectorstore.as_retriever(search_kwargs={'k': 2}),
         return_source_documents=True,
-        chain_type_kwargs={'prompt': prompt}
+        chain_type_kwargs={'prompt': prompt},
+        input_key="messages",  # ensure it matches your ainvoke call
+        output_key="result"
     )
     return qa_chain
 
 
-def qa_bot(prakriti):
-    print(prakriti)
+def qa_bot(prakriti,session_id):
+    # print(prakriti)
     embeddings = FastEmbedEmbeddings()
     vectorstore = Qdrant(
-        client=client, embeddings=embeddings, collection_name="rag")
+        client=client, embeddings=embeddings, collection_name="ayurvision-pro")
     llm = chat_model
     qa_prompt = set_custom_prompt(prakriti)
-    qa = retrieval_qa_chain(llm, qa_prompt, vectorstore)
-    return qa
+    
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", qa_prompt),
+        MessagesPlaceholder(variable_name="messages"),
+    ])
+    qa_chain = retrieval_qa_chain(llm, prompt, vectorstore)
+    
+    chain_with_history = RunnableWithMessageHistory(
+        qa_chain,
+        lambda _: get_chat_history(session_id),
+        input_messages_key="messages",
+        history_messages_key="chat_history"
+    )
+    return chain_with_history
 
 
 @cl.on_chat_start
@@ -128,15 +156,21 @@ async def start():
     This asynchronous function creates a new instance of the retrieval QA bot,
     sends a welcome message, and stores the bot instance in the user's session.
     """
-    chain = qa_bot(config.prakriti)
+    import uuid
+    
+    
+    session_id = str(uuid.uuid4())
+    chain = qa_bot(config.prakriti, session_id)
+    
+    cl.user_session.set("chain", chain)
+    cl.user_session.set("session_id", session_id)
+
     welcome_message = cl.Message(content="Starting the bot...")
     await welcome_message.send()
     welcome_message.content = (
         "Hi, Welcome to AyurBot,I am your personal ayurvedic doc go ahead and ask me some questions."
     )
     await welcome_message.update()
-    cl.user_session.set("chain", chain)
-
 
 @cl.on_message
 async def main(message):
@@ -148,9 +182,11 @@ async def main(message):
     call method with the given message and callback. The bot's answer and source
     documents are then extracted from the response.
     """
+    
+    session_id = cl.user_session.get("session_id")
 
     if config.needs_refresh:  # for updating the prakriti if update prakriti endpoint is hit
-        chain = qa_bot(config.prakriti)
+        chain = qa_bot(config.prakriti,session_id)
         cl.user_session.set("chain", chain)
         config.needs_refresh = False  # Reset refresh flag
 
@@ -160,11 +196,20 @@ async def main(message):
     # res=await chain.acall(message, callbacks=[cb])
     print(message.content)
     # prak = "the user is {prakriti} type".format(prakriti=prakriti)
-    res = await chain.ainvoke(message.content, callbacks=[cb])
+    
+    config_obj = {"configurable": {"session_id": session_id}}
+    res = await chain.ainvoke(
+    {"messages": [{"role": "user", "content": message.content}]},
+    config={"configurable": {"session_id": session_id}},
+    callbacks=[cb],
+)
+
+    
+    # res = await chain.ainvoke(message.content, callbacks=[cb])
     # prak = "the user is {prakriti} type".format(prakriti=prakriti)
-    res = await chain.ainvoke(message.content, callbacks=[cb])
-    # print(f"response: {res}")
-    answer = res["result"]
+    print(f"response: {res}")
+    # answer = res["result"]
+    answer = res.get("result", "I couldn't generate an answer.")
     # answer = answer.replace(".", ".\n")
     source_documents = res["source_documents"]
 

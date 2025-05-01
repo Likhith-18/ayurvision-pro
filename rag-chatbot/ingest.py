@@ -89,7 +89,7 @@ def create_vector_database():
         documents=docs,
         embedding=embeddings,
         url=qdrant_url,
-        collection_name="rag",
+        collection_name="ayurvision-pro",
         api_key=qdrant_api_key
     )
 
