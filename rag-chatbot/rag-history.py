@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_groq import ChatGroq
+from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import Qdrant
 from qdrant_client import QdrantClient
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
@@ -15,6 +16,7 @@ from config import config
 
 load_dotenv()
 
+openai_api_key = os.getenv("OPENAI_API_KEY")
 groq_api_key = os.getenv("GROQ_API_KEY")
 qdrant_url = os.getenv("QDRANT_URL")
 qdrant_api_key = os.getenv("QDRANT_API_KEY")
@@ -84,7 +86,10 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
             store[session_id] = ChatMessageHistory()
         return store[session_id]
 
-llm = ChatGroq(temperature=1, model_name="gemma2-9b-it",streaming=True)
+# llm = ChatGroq(temperature=0, model_name="gemma2-9b-it",streaming=True)
+llm = ChatOpenAI(model="gpt-4o",
+    temperature=0,
+    max_tokens=256)
 
 def qa_bot(prakriti):
     client = QdrantClient(api_key=qdrant_api_key, url=qdrant_url,)

@@ -61,10 +61,10 @@ async def predict_prakriti(request: Request):
     config.needs_refresh = True
     return JSONResponse(content={"success": True, "prakriti": config.prakriti})
 
-mount_chainlit(app=app, target="app-chainlit.py", path="/chatbot")
+mount_chainlit(app=app, target="rag-history.py", path="/chatbot")
 
 # app.mount('/api', api)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="localhost", port=port)
