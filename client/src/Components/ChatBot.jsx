@@ -1,3 +1,5 @@
+import React from "react";
+
 const ChatBot = () => {
   // const api = import.meta.env.VITE_CHATBOT_URL;
   // console.log(api);
@@ -7,7 +9,7 @@ const ChatBot = () => {
       <iframe
         // src="http://localhost:8000/chatbot"
         // src="https://ayurvision-server.onrender.com/chatbot/"
-        src="/chatbot"
+        src={import.meta.env.VITE_CHATBOT_URL}
         width="100%"
         height="94%"
         style={{ border: "none" }}

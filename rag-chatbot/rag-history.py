@@ -29,7 +29,7 @@ If you don't know the answer, just say that you don't know, don't try to make up
 this user has kapha prakriti and this is taken from the test the user gave on our website.
 Context: {context}
 
-Only return the helpful answer below and nothing else.
+Only return the helpful answer below and nothing else other than ayurveda.
 Answer general questions normally.
 Helpful answer:
 """
@@ -38,7 +38,7 @@ If you don't know the answer, just say that you don't know, don't try to make up
 this user has vata prakriti and this is taken from the test the user gave on our webiste.
 Context: {context}
 
-Only return the helpful answer below and nothing else.
+Only return the helpful answer below and nothing else other than ayurveda.
 # Answer general questions normally.
 Helpful answer:
 """
@@ -47,7 +47,7 @@ If you don't know the answer, just say that you don't know, don't try to make up
 this user has pitta prakriti and this is taken from the test the user gave on our website.
 Context: {context}
 
-Only return the helpful answer below and nothing else.
+Only return the helpful answer below and nothing else other than ayurveda.
 Answer general questions normally.
 Helpful answer:
 """
@@ -56,7 +56,7 @@ If you don't know the answer, just say that you don't know, don't try to make up
 the user has not taken any prakriti test from our website and consider him as neutral prakriti.
 Context: {context}
 
-Only return the helpful answer below and nothing else.
+Only return the helpful answer below and nothing else other than ayurveda.
 # Answer general questions normally.
 Helpful answer:
 """
@@ -87,9 +87,8 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
         return store[session_id]
 
 # llm = ChatGroq(temperature=0, model_name="gemma2-9b-it",streaming=True)
-llm = ChatOpenAI(model="gpt-4o",
-    temperature=0,
-    max_tokens=256)
+llm = ChatGroq(temperature=0, model_name="llama-3.3-70b-versatile",streaming=True)
+# llm = ChatOpenAI(model="gpt-4o",temperature=0,max_tokens=256)
 
 def qa_bot(prakriti):
     client = QdrantClient(api_key=qdrant_api_key, url=qdrant_url,)

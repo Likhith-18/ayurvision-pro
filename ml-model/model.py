@@ -112,4 +112,4 @@ if __name__ == '__main__':
     import uvicorn
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
     os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-    uvicorn.run(app, host="0.0.0.0", port=3000)
+    uvicorn.run(app, host="localhost", port=3000)

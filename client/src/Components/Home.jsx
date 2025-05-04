@@ -1,3 +1,4 @@
+import React from "react";
 import Navbar from "./Navbar";
 // import MyForm from "./MyForm";
 import ChatBot from "./ChatBot";

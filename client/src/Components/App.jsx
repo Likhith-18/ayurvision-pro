@@ -1,16 +1,16 @@
 import Home from "./Home";
-
+import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MyForm from "./MyForm";
-import ChatBot from "./ChatBot";
+import ImagePredict from "./ImagePredict";
 export default function App() {
   return (
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/MyForm" element={<MyForm />} />
-          {/* <Route path="/Chatbot" element={<ChatBot />} /> */}
+          <Route path="/" Component={Home} />
+          <Route path="/myform" Component={MyForm} />
+          <Route path="/image-predict" Component={ImagePredict} />
         </Routes>
       </div>
     </Router>

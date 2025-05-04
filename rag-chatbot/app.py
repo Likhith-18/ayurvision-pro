@@ -40,11 +40,11 @@ def hello():
     return "hello form likhtih"
 
 
-# @app.post('/update-prakriti')
-# async def update_prakriti(request: PrakritiUpdateRequest):
-#     config.prakriti = request.prakriti.lower()
-#     config.needs_refresh = True
-#     return JSONResponse(content={"success": True, "prakriti": config.prakriti})
+@app.post('/update-prakriti')
+async def update_prakriti(request: PrakritiUpdateRequest):
+    config.prakriti = request.prakriti.lower()
+    config.needs_refresh = True
+    return JSONResponse(content={"success": True, "prakriti": config.prakriti})
 
 
 @app.post("/predict")
