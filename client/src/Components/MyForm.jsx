@@ -193,6 +193,23 @@ const MyForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
 
+  const mappings = {
+    2: [2, 1, 0],
+    3: [0, 1, 2, 1],
+    5: [0, 1, 2, 1],
+    6: [0, 2, 1],
+    7: [0, 2, 1],
+    11: [2, 0, 1],
+    14: [1, 0, 2],
+    15: [1, 0, 2],
+    17: [2, 1, 0],
+    21: [2, 0, 1],
+    25: [1, 2, 0],
+    29: [0, 1, 2],
+    30: [2, 0, 1],
+    32: [2, 0, 1],
+  };
+
   useEffect(() => {
     // const data = {
     //   "1.What is your gender?": ["Female", "Male"],
@@ -474,13 +491,53 @@ const MyForm = () => {
     for (const key in formData) {
       const questionNumber = parseInt(key.split(".")[0], 10);
       if (overlappingIndexes.includes(questionNumber)) {
-        vikritiArray.push(parseInt(formData[key], 10));
+        vikritiArray.push(
+          mappings[questionNumber][parseInt(formData[key], 10)]
+        );
       }
       dataArray.push(parseInt(formData[key], 10));
     }
     const prakritiArray = dataArray.slice(0, 34);
     vikritiArray.push(...dataArray.slice(34));
 
+    const freq = {};
+
+    for (const num of vikritiArray) {
+      freq[num] = (freq[num] || 0) + 1;
+    }
+
+    // const percentageFreq = {};
+    // for (const key in freq) {
+    //   percentageFreq[key] = ((freq[key] / total) * 100).toFixed(2);
+    // // }
+    // const vataPer = ((freq[0] / 30) * 100).toFixed(2);
+    // const pittaPer = ((freq[1] / 30) * 100).toFixed(2);
+    // const kaphaPer = ((freq[2] / 30) * 100).toFixed(2);
+
+    const doshaMap = {
+      0: "Vata",
+      1: "Pitta",
+      2: "Kapha",
+    };
+
+    // Create object with percentage + label
+    const labeledPercentages = {};
+    let maxKey = null;
+    let maxPercentage = 0;
+
+    for (const key in freq) {
+      const percent = (freq[key] / 30) * 100;
+      const label = doshaMap[key] || `Unknown (${key})`;
+      labeledPercentages[label] = percent.toFixed(2) + "%";
+
+      if (percent > maxPercentage) {
+        maxPercentage = percent;
+        maxKey = key;
+      }
+    }
+
+    console.log(doshaMap[maxKey], maxPercentage);
+    console.log(labeledPercentages);
     console.log(prakritiArray);
     console.log(vikritiArray);
     let res = "";
