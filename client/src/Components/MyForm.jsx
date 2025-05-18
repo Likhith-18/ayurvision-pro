@@ -185,6 +185,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import axios from "axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { data } from "react-router-dom";
 // require("dotenv").config();
 const MyForm = () => {
   const [formData, setFormData] = useState({});
@@ -193,6 +194,93 @@ const MyForm = () => {
   const [apiResponse, setApiResponse] = useState("");
 
   useEffect(() => {
+    // const data = {
+    //   "1.What is your gender?": ["Female", "Male"],
+    //   "2.How is your body frame?": ["Broad", "Medium", "Thin/Narrow"],
+    //   "3.What is the nature of your skin?": [
+    //     "Dry",
+    //     "Normal",
+    //     "Oily",
+    //     "Seasonal/Variable",
+    //   ],
+    //   "4.What is the colour of your skin?": [
+    //     "Dark",
+    //     "Fair, Pale, Yellowish",
+    //     "Fair, Pink",
+    //     "Fair, Reddish",
+    //     "Whitish",
+    //   ],
+    //   "5.How often does your weight change?": [
+    //     "Difficulty in gaining",
+    //     "Gain and lose easily",
+    //     "Gain easily and lose with difficulty",
+    //     "Stable",
+    //   ],
+    //   "6.What is the colour of your nails?": ["Pale Yellow", "Pink", "Reddish"],
+    //   "7.What is the colour of your teeth?": [
+    //     "Dull/Blackish",
+    //     "Milky White",
+    //     "Yellowish",
+    //   ],
+    //   "8.What is the shape of your teeth": ["Irregular", "Regular"],
+    //   "9.How fast can you recall past memories?": [
+    //     "Moderately",
+    //     "Quickly",
+    //     "Slowly",
+    //   ],
+    //   "10.How fast can you memorize new concepts?": [
+    //     "Moderately",
+    //     "Quickly",
+    //     "Slowly",
+    //   ],
+    //   "11.How much sleep do you get on average?": ["High", "Low", "Medium"],
+    //   "12.How well do you sleep once you fall asleep?": [
+    //     "Deep sleep",
+    //     "Shallow sleep",
+    //     "Not deep but sound sleep",
+    //   ],
+    //   "13.How much do you speak on average?": ["Excessive", "Less", "Moderate"],
+    //   "14.How fast do you speak?": ["Medium", "Quick", "Slow"],
+    //   "15.How fast do you walk?": ["Medium", "Quick", "Slow"],
+    //   "16.How frequently do you pass bowels?": ["Irregular", "Regular"],
+    //   "17.What is the status of old friendships?": ["Good", "Medium", "Poor"],
+    //   "18.How often do you dream in your sleep?": ["High", "Low", "Medium"],
+    //   "19.Is your voice and speaking clear?": ["Yes, clear", "No, not clear"],
+    //   "20.What is the colour of your eyes?": [
+    //     "Black",
+    //     "Dark Brown",
+    //     "Greyish",
+    //     "Light Brown",
+    //   ],
+    //   "21.What kind of weather would you avoid?": ["Both", "Cold", "Warm"],
+    //   "22.How would you describe your hair?": ["Dense", "Moderate", "Scanty"],
+    //   "23.Is you hair thick or thin?": ["Thick", "Thin"],
+    //   "24.Do you suffer from hair fall?": ["Yes, hair falling", "No hair fall"],
+    //   "25.What kind of appetite do you have?": ["High", "Low", "Medium"],
+    //   "26.What is the regularity of your food consumption?": [
+    //     "Irregular",
+    //     "Regular",
+    //   ],
+    //   "27.How frequently do you usually need to go to the bathroom?": [
+    //     "Irregular",
+    //     "Regular",
+    //   ],
+    //   "28.How much do you sweat?": ["High", "Low", "Medium"],
+    //   "29.What is the consistency of your stool?": [
+    //     "Hard",
+    //     "Semisolid",
+    //     "Medium",
+    //   ],
+    //   "30.What would you rate your mental strength?": ["Good", "Okay", "Bad"],
+    //   "31.What would you rate your physical strength?": ["Good", "Okay", "Bad"],
+    //   "32.How is your anger tolerance": ["Good", "Medium", "Poor"],
+    //   "33.How often do you get angry?": ["Moderately", "Very often", "Rarely"],
+    //   "34.Are you an argumentative person?": [
+    //     "Argumentative",
+    //     "Non Argumentative",
+    //   ],
+    // };
+
     const data = {
       "1.What is your gender?": ["Female", "Male"],
       "2.How is your body frame?": ["Broad", "Medium", "Thin/Narrow"],
@@ -278,7 +366,79 @@ const MyForm = () => {
         "Argumentative",
         "Non Argumentative",
       ],
+
+      // Appended Questions
+      "35.Type of Hair": [
+        "Dry and with Splits End",
+        "Normal,Thin,More Hair Fall",
+        "Greasy, Heavy",
+      ],
+      "36.Color of Hair": ["Pale Brown", "Red or Brown", "Jet Black"],
+      "37.Complexion": ["Dark, Blackish", "Pink to Red", "Glowing, White"],
+      "38.Pace of Performing Work": [
+        "Fast, Always in Hurry",
+        "Medium, Energetic",
+        "Slow, Steady",
+      ],
+      "39.Memory": ["Short Term Bad", "Good Memory", "Long Term is Best"],
+      "40.Grasping power": [
+        "Grasps Quickly but not Completely and Forgets Quickly",
+        "Grasps Quickly but Completely and have Good Memory",
+        "Grasps Late and Retains for Longer Time",
+      ],
+      "41.Mood": [
+        "Changes Quickly have Frequent Mood Swings",
+        "Changes Slowly",
+        "Stable Constant",
+      ],
+      "42.Eating Habit": [
+        "Eats Quickly Without Chewing Properly",
+        "Eats at a Moderate Speed",
+        "Chews Food Properly",
+      ],
+      "43.Body Temperature": [
+        "Less than Normal, Hands and Feets are Cold",
+        "More than Normal, Face and Forehead Hot",
+        "Normal, Hands and Feets Slightly Cold",
+      ],
+      "44.Joints": [
+        "Weak, Noise on Movement",
+        "Healthy with Optimal Strength",
+        "Heavy Weight Bearing",
+      ],
+      "45.Nature": [
+        "Timid, Jealous",
+        "Egoistic, Fearless",
+        "Forgiving, Greatful , Not Greedy",
+      ],
+      "46.Body Energy": [
+        "Becomes Low in Evening, Fatigues After Less Work",
+        "Moderate , Gets Tired After Medium Work",
+        "Excellent Energy Throughout Day Not Easily Fatigued",
+      ],
+      "47.Eyeball": ["Unsteady, Fast Moving", "Moving Slowly", "Steady"],
+      "48.Quality of Voice": [
+        "Rough with Broken Words",
+        "Fast, Commanding",
+        "Soft and Deep",
+      ],
+      "49.Dreams": [
+        "Sky, Wind, Flying , Objects and Confusion",
+        "Fire,Light,Bright Colors, Violence",
+        "Water Pools, Gardens and Good Relationships",
+      ],
+      "50.Wealth": [
+        "Spends Without Thinking Much",
+        "Saves but Spends on Valuable Things",
+        "Prefers More Savings",
+      ],
     };
+
+    //prakriti -->  1,4,8,9,10,12,13,16,18,19,20,22,23,24,26,27,28,31,33,34
+    // over lapping --> 2,3,5,6,7,11,14,15,17,21,25,29,30,32
+    //vikriti --> 3,5 (pass 4th option as 2nd option BY DEFAULT)
+    // ADDING QUESTIONS
+    // WEBSITE -- Q11,
 
     const questionsArray = Object.entries(data).map(([key, options]) => ({
       key,
@@ -301,20 +461,33 @@ const MyForm = () => {
       [name]: value,
     });
   };
+  const overlappingIndexes = [
+    2, 3, 5, 6, 7, 11, 14, 15, 17, 21, 25, 29, 30, 32,
+  ];
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-
+    console.log(formData);
     const dataArray = [];
+    const vikritiArray = [];
     for (const key in formData) {
+      const questionNumber = parseInt(key.split(".")[0], 10);
+      if (overlappingIndexes.includes(questionNumber)) {
+        vikritiArray.push(parseInt(formData[key], 10));
+      }
       dataArray.push(parseInt(formData[key], 10));
     }
+    const prakritiArray = dataArray.slice(0, 34);
+    vikritiArray.push(...dataArray.slice(34));
+
+    console.log(prakritiArray);
+    console.log(vikritiArray);
     let res = "";
     axios
       // .post("https://ayurvision-server.onrender.com/predict", {
       .post(`${import.meta.env.VITE_AZURE_WEB_APP_URL}/predict`, {
-        data: dataArray,
+        data: prakritiArray,
       })
       .then(async (response) => {
         // console.log(response);
