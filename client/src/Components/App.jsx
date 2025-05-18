@@ -3,6 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MyForm from "./MyForm";
 import ImagePredict from "./ImagePredict";
+
 export default function App() {
   return (
     <Router>
