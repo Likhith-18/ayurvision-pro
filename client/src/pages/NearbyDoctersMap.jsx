@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import GoogleMap from '../Components/GoogleMaps';
 import ErrorBoundary from '../Components/ErrorBoundary';
+import Navbar from '../Components/Navbar';
 
 const NearbyDoctorsMap = () => {
   const [doctors, setDoctors] = useState([]);
@@ -31,7 +32,8 @@ const NearbyDoctorsMap = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      <div className="w-full md:w-1/3 overflow-y-auto p-4">
+      <Navbar />
+      <div className="w-full md:w-1/3 overflow-y-auto p-4 mt-24">
         {doctors.map((doc, index) => (
           <div
             key={index}

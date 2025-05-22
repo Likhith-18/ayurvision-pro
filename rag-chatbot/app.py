@@ -1,15 +1,22 @@
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+from chainlit.utils import mount_chainlit
+from config import config
+import os
+import httpx
+import requests  # ✅ ADD THIS LINE
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import requests
+
 from dotenv import load_dotenv
 
 app = FastAPI()
 
 load_dotenv()
 
+# CORS
 origins = [
     "http://localhost:5173",  # React app
     "https://ayurvision.vercel.app"  # Deployment on Vercel
@@ -17,13 +24,20 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all origins for testing
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 port = int(os.getenv('PORT', 5000))
+
+# Models
+class PrakritiUpdateRequest(BaseModel):
+    prakriti: str
+
+class PredictRequest(BaseModel):
+    data: list
 
 class Location(BaseModel):
     lat: float
@@ -35,6 +49,12 @@ def hello():
     @app.get("/api/google-maps-key")
     def get_google_maps_key():
         return {"key": os.getenv('GOOGLE_API_KEY')}  # Fetching from environment variables
+
+@app.post("/update-prakriti")
+async def update_prakriti(request: PrakritiUpdateRequest):
+    config.prakriti = request.prakriti.lower()
+    config.needs_refresh = True
+    return JSONResponse(content={"success": True, "prakriti": config.prakriti})
 
 @app.post("/findDoctors")
 async def get_nearby_doctors(location: Location):
@@ -72,6 +92,19 @@ async def get_nearby_doctors(location: Location):
         print("❌ Error fetching doctor data:", e)
         raise HTTPException(status_code=500, detail="Error fetching doctor data")
 
-if __name__ == '__main__':
+@app.post("/predict")
+async def predict_prakriti(request: PredictRequest):
+    input_json = request.datas
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://localhost:3000/mlmodel", json={"data": input_json})
+
+    result = response.json()
+    config.prakriti = result['prakriti'].lower()
+    config.needs_refresh = True
+    return JSONResponse(content={"success": True, "prakriti": config.prakriti})
+
+mount_chainlit(app=app, target="rag-history.py", path="/chatbot")
+
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=port)

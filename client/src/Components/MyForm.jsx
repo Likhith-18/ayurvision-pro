@@ -578,7 +578,7 @@ const MyForm = () => {
 
       <div className="min-h-screen bg-green-100">
         <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold mb-8">Prakriti Identification</h1>
+          <h1 className="text-4xl font-bold mb-8 mt-4">Prakriti Identification</h1>
           <div className="w-full max-w-3xl bg-white p-8 rounded shadow-md">
             <form onSubmit={handleSubmit} className="w-full">
               {questions.map((question, index) => (

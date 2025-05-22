@@ -50,7 +50,7 @@ const GoogleMap = ({ doctors, selectedDoctor }) => {
     }
   }, [map, selectedDoctor]);
 
-  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
+  return <div ref={mapRef} style={{ height: '100%', width: '100%', zIndex: -1 }} />;
 };
 
 export default GoogleMap;

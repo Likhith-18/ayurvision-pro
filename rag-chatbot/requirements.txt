@@ -2,6 +2,7 @@ fastapi[all]
 uvicorn
 langchain
 langchain-community
+langchain-openai
 langchain-groq
 fastembed
 qdrant_client

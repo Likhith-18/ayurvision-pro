@@ -93,8 +93,9 @@ def hello():
 async def predict_prakriti(request: Request):
     input = await request.json()
     input = input['data']
-    print(input)
-    pred = model.predict(np.reshape(input['data'], (1, 34)))
+    input_integer = [int(x) for x in input]
+    print(input_integer)
+    pred = model.predict(np.reshape(input_integer, (1, 34)))
     prediction = np.argmax(pred, axis=1)[0]
     output = classes[prediction]
     output = output.strip().replace("\\", "")
