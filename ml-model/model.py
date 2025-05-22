@@ -116,8 +116,10 @@ async def predict_plant(request: Request):
     file_path = os.path.join(uploads_dir, "plant.jpg")
     with open(file_path, "wb") as f:
         f.write(image_bytes)
-    image=cv2.imread(str('./uploads/plant.jpg'))
+    image = cv2.imread(str('./uploads/plant.jpg'))
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     resized_img = cv2.resize(image, (128, 128))
+    resized_img = resized_img.astype('float32') / 255.0  # Normalize
     logits=plant_model.predict(resized_img[np.newaxis,...])
     activations=tf.nn.softmax(logits)
     prediction = np.argmax(activations, axis=1)[0]
