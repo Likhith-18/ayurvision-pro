@@ -36,7 +36,7 @@ def hello():
     def get_google_maps_key():
         return {"key": os.getenv('GOOGLE_API_KEY')}  # Fetching from environment variables
 
-@app.post("/api/nearby-doctors")
+@app.post("/findDoctors")
 async def get_nearby_doctors(location: Location):
     try:
         params = {
