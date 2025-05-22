@@ -1,25 +1,21 @@
-
-from fastapi import FastAPI, HTTPException, Request, requests
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from chainlit.utils import mount_chainlit
-from pydantic import BaseModel
 from config import config
 import os
 import httpx
+import requests  # ✅ ADD THIS LINE
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 app = FastAPI()
-
-# api = FastAPI()
-
 load_dotenv()
 
-
+# CORS
 origins = [
-    "http://localhost:5173",  # react app
-    "https://ayurvision.vercel.app"  # deployement on vercel
+    "http://localhost:5173",
+    "https://ayurvision.vercel.app"
 ]
 
 app.add_middleware(
@@ -30,36 +26,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 port = int(os.getenv('PORT', 5000))
 
-
+# Models
 class PrakritiUpdateRequest(BaseModel):
     prakriti: str
 
-# Request body model
 class Location(BaseModel):
     lat: float
     lng: float
 
-@app.get('/')
+@app.get("/")
 def hello():
-    return "hello form likhtih"
+    return "Hello from AyurVision"
 
-
-@app.post('/update-prakriti')
+@app.post("/update-prakriti")
 async def update_prakriti(request: PrakritiUpdateRequest):
     config.prakriti = request.prakriti.lower()
     config.needs_refresh = True
     return JSONResponse(content={"success": True, "prakriti": config.prakriti})
 
-
-@app.get("/api/nearby-doctors")
-async def get_nearby_doctors():
+@app.post("/api/nearby-doctors")
+def get_nearby_doctors(location: Location):
     try:
         params = {
-            # 'location': f'{location.lat},{location.lng}',
-            'location': '17.387140,78.491684',
+            'location': f"{location.lat},{location.lng}",
             'radius': 5000,
             'keyword': 'ayurvedic doctor',
             'type': 'doctor',
@@ -86,29 +77,23 @@ async def get_nearby_doctors():
         return doctors
 
     except Exception as e:
+        print("❌ Error fetching doctor data:", e)
         raise HTTPException(status_code=500, detail="Error fetching doctor data")
-    
-    
+
 @app.post("/predict")
-async def predict_prakriti(request: Request):
+async def predict_prakriti(request):
     input_json = await request.json()
-    # input_data = json.dumps(input_json)
 
     async with httpx.AsyncClient() as client:
         response = await client.post("http://localhost:3000/mlmodel", json={"data": input_json})
 
-    # return {"prediction": result, "update_response": update_response.json()}
-    response = response.json()
-    config.prakriti = response['prakriti'].lower()
+    result = response.json()
+    config.prakriti = result['prakriti'].lower()
     config.needs_refresh = True
     return JSONResponse(content={"success": True, "prakriti": config.prakriti})
 
 mount_chainlit(app=app, target="rag-history.py", path="/chatbot")
 
-# app.mount('/api', api)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="localhost", port=port)
-
-
