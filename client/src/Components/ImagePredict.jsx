@@ -26,7 +26,7 @@ export default function ImagePredict() {
       const response=await axios.post(`${import.meta.env.VITE_AZURE_WEB_APP_URL}/plant`, {image:image});
       setLoading(false);
       // const resizedUrl=`${imageType},${Buffer.from(response.data.resizedImage,ArrayBuffer).toString('base64')}`
-      setInference(response.data);
+      setInference(response.data.result);
       setGotInference(true);
       toast.success("File uploaded successfully");
       }
@@ -39,10 +39,8 @@ export default function ImagePredict() {
   }
   return (
     <>
-      <div style={{ marginTop: "70px" }}>
-        <Navbar />
-      </div>
-      <div className="min-h-screen bg-green-100">
+      <div className='mb-2 fixed'><Navbar /></div>
+      <div className="min-h-[800px] h-screen bg-green-100 pt-16">
         <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-8 mt-4">Ayurvedic Plant Identification</h1>
           <div className="w-full max-w-3xl bg-white p-8 rounded shadow-md pb-16">

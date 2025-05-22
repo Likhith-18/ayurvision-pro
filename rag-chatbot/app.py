@@ -3,12 +3,10 @@ from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 from chainlit.utils import mount_chainlit
 from config import config
-import os
-import httpx
-import requests  # ✅ ADD THIS LINE
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import requests
+import httpx
 
 from dotenv import load_dotenv
 
@@ -94,14 +92,30 @@ async def get_nearby_doctors(location: Location):
 
 @app.post("/predict")
 async def predict_prakriti(request: PredictRequest):
-    input_json = request.datas
+    input_json = request.data
     async with httpx.AsyncClient() as client:
-        response = await client.post("http://localhost:3000/mlmodel", json={"data": input_json})
+        response = await client.post("http://localhost:3000/prakriti", json={"data": input_json})
 
     result = response.json()
     config.prakriti = result['prakriti'].lower()
     config.needs_refresh = True
     return JSONResponse(content={"success": True, "prakriti": config.prakriti})
+
+@app.post("/plant")
+async def identify_plant(request: Request):
+    try:
+        data = await request.json()
+        image = data.get("image")
+        if not image:
+            raise HTTPException(status_code=400, detail="No image provided")
+
+        async with httpx.AsyncClient() as client:
+            response = await client.post("http://localhost:3000/plant", json={"image": image})
+        plant = response.json().get("plant")
+        return JSONResponse(content={"result": plant})
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Error processing plant identification")
 
 mount_chainlit(app=app, target="rag-history.py", path="/chatbot")
 

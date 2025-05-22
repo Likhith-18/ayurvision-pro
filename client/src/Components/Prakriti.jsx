@@ -187,7 +187,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { data } from "react-router-dom";
 // require("dotenv").config();
-const MyForm = () => {
+const Prakriti = () => {
   const [formData, setFormData] = useState({});
   const [questions, setQuestions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -649,4 +649,4 @@ const MyForm = () => {
   );
 };
 
-export default MyForm;
+export default Prakriti;

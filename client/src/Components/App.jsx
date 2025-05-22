@@ -1,7 +1,7 @@
 import Home from "./Home";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MyForm from "./MyForm";
+import Prakriti from "./Prakriti";
 import ImagePredict from "./ImagePredict";
 import NearbyDoctorsMap from '../pages/NearbyDoctersMap';
 
@@ -11,7 +11,7 @@ export default function App() {
       <div>
         <Routes>
           <Route path="/" Component={Home} />
-          <Route path="/myform" Component={MyForm} />
+          <Route path="/myform" Component={Prakriti} />
           <Route path="/image-predict" Component={ImagePredict} />
           <Route path="/findDoctors" Component={NearbyDoctorsMap} />
         </Routes>
