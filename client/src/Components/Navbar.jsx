@@ -21,7 +21,7 @@ export default function Navbar() {
               AyurVision
             </Link>
           </div>
-          <ul>
+          <ul className="flex space-x-4">
             <li>
               <Link className="text-white" to="/">
                 Home
@@ -33,6 +33,11 @@ export default function Navbar() {
             <li>
               <Link className="text-white" to="/MyForm">
                 Prakriti
+              </Link>
+            </li>
+            <li>
+              <Link className="text-white" to="/findDoctors">
+                Doctors
               </Link>
             </li>
           </ul>

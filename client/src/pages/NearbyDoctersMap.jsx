@@ -13,7 +13,7 @@ const NearbyDoctorsMap = () => {
       const { latitude, longitude } = position.coords;
 
       try {
-        const res = await axios.post('http://localhost:5000/api/nearby-doctors', {
+        const res = await axios.post('http://localhost:5000/findDoctors', {
           lat: latitude,
           lng: longitude,
         });
