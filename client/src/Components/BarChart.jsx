@@ -24,6 +24,8 @@ ChartJS.register(
 export const BarChart = ({ dataObject }) => {
   const labels = Object.keys(dataObject);
   const values = Object.values(dataObject);
+  console.log("Chart data:", dataObject);
+  const barColors = ["#FF6384", "#36A2EB", "#FFCE56"]; // Kapha, Pitta, Vata
 
   const data = {
     labels,
@@ -31,19 +33,52 @@ export const BarChart = ({ dataObject }) => {
       {
         label: "Percentage",
         data: values,
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: barColors,
+        borderColor: "#ddd",
         borderWidth: 1,
+        borderRadius: 8,
+        barThickness: 40,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.raw}%`,
+        },
+      },
+      title: {
+        display: true,
+        text: "Prakriti Composition",
+        font: {
+          size: 20,
+        },
+      },
+    },
     scales: {
       y: {
         beginAtZero: true,
         max: 100,
+        ticks: {
+          stepSize: 20,
+          callback: (value) => `${value}%`,
+        },
+        title: {
+          display: true,
+          text: "Percentage",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Doshas",
+        },
       },
     },
   };
