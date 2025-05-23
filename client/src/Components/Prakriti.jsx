@@ -185,7 +185,8 @@ import MoonLoader from "react-spinners/MoonLoader";
 import axios from "axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import { data } from "react-router-dom";
+import { BarChart } from "./BarChart";
+
 // require("dotenv").config();
 const Prakriti = () => {
   const [formData, setFormData] = useState({});
@@ -543,7 +544,7 @@ const Prakriti = () => {
     let res = "";
     axios
       // .post("https://ayurvision-server.onrender.com/predict", {
-      .post(`${import.meta.env.VITE_AZURE_WEB_APP_URL}/predict`, {
+      .post(`${import.meta.env.VITE_SERVER_URL}/predict`, {
         data: prakritiArray,
       })
       .then(async (response) => {
@@ -578,7 +579,9 @@ const Prakriti = () => {
 
       <div className="min-h-screen bg-green-100">
         <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-8 mt-4">Prakriti Identification</h1>
+          <h1 className="text-4xl font-bold mb-8 mt-4">
+            Prakriti Identification
+          </h1>
           <div className="w-full max-w-3xl bg-white p-8 rounded shadow-md">
             <form onSubmit={handleSubmit} className="w-full">
               {questions.map((question, index) => (
@@ -633,9 +636,15 @@ const Prakriti = () => {
                   </>
                 )}
                 {apiResponse && !isSubmitting && (
-                  <p className="text-xl ">
-                    Your Prakriti is: <b>{capitalize(apiResponse)}</b>
-                  </p>
+                  <div>
+                    <div style={{ width: "600px", margin: "0 auto" }}>
+                      <h2>Subject Percentages</h2>
+                      <BarChart dataObject={labeledPercentages} />
+                    </div>
+                    <p className="text-xl ">
+                      Your Prakriti is: <b>{capitalize(apiResponse)}</b>
+                    </p>
+                  </div>
                 )}
               </div>
             </form>

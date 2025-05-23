@@ -69,7 +69,7 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 prakriti_model = tf.keras.models.load_model('./models/prakriti/local_model.keras')
 # model.load_weights('./models/local_model.weights.h5')
-plant_model = tf.keras.models.load_model('./models/image')
+plant_model = tf.keras.models.load_model('./models/image/')
 
 classes = ['Kapha', 'Pitta', 'Vata']
 
