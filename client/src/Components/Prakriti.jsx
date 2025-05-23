@@ -193,6 +193,7 @@ const Prakriti = () => {
   const [questions, setQuestions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
+  const [labeledPercentages, setLabeledPercentages] = useState({});
 
   const mappings = {
     2: [2, 1, 0],
@@ -522,14 +523,14 @@ const Prakriti = () => {
     };
 
     // Create object with percentage + label
-    const labeledPercentages = {};
+
     let maxKey = null;
     let maxPercentage = 0;
 
     for (const key in freq) {
       const percent = (freq[key] / 30) * 100;
       const label = doshaMap[key] || `Unknown (${key})`;
-      labeledPercentages[label] = percent.toFixed(2) + "%";
+      `labeledPercentages`[label] = parseFloat(percent.toFixed(2));
 
       if (percent > maxPercentage) {
         maxPercentage = percent;
@@ -564,7 +565,6 @@ const Prakriti = () => {
       .finally(() => {
         setIsSubmitting(false);
       });
-
     setFormData({});
   };
 
@@ -639,7 +639,11 @@ const Prakriti = () => {
                   <div>
                     <div style={{ width: "600px", margin: "0 auto" }}>
                       <h2>Subject Percentages</h2>
-                      <BarChart dataObject={labeledPercentages} />
+                      <BarChart
+                        dataObject={Object.entries(labeledPercentages).map(
+                          ([name, value]) => ({ name, value })
+                        )}
+                      />
                     </div>
                     <p className="text-xl ">
                       Your Prakriti is: <b>{capitalize(apiResponse)}</b>
