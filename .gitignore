@@ -165,3 +165,5 @@ dist
 
 .venv
 rag-chatbot/venv/
+
+__pycache__/*

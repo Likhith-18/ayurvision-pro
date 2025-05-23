@@ -212,6 +212,15 @@ const Prakriti = () => {
     32: [2, 0, 1],
   };
 
+
+  const doshaMap = {
+    0: "Vata",
+    1: "Pitta",
+    2: "Kapha",
+  };
+
+  let maxKey = 0;
+
   useEffect(() => {
     // const data = {
     //   "1.What is your gender?": ["Female", "Male"],
@@ -516,21 +525,13 @@ const Prakriti = () => {
     // const pittaPer = ((freq[1] / 30) * 100).toFixed(2);
     // const kaphaPer = ((freq[2] / 30) * 100).toFixed(2);
 
-    const doshaMap = {
-      0: "Vata",
-      1: "Pitta",
-      2: "Kapha",
-    };
-
     // Create object with percentage + label
-
-    let maxKey = null;
     let maxPercentage = 0;
 
     for (const key in freq) {
       const percent = (freq[key] / 30) * 100;
       const label = doshaMap[key] || `Unknown (${key})`;
-      `labeledPercentages`[label] = parseFloat(percent.toFixed(2));
+      labeledPercentages[label] = parseFloat(percent.toFixed(2));
 
       if (percent > maxPercentage) {
         maxPercentage = percent;
@@ -622,7 +623,7 @@ const Prakriti = () => {
               >
                 Submit
               </button>
-              <div className="flex justify-center items-center my-10 h-6">
+              <div className="flex justify-center items-center my-10">
                 {isSubmitting && (
                   <>
                     <p className="text-xl inline px-5">
@@ -636,15 +637,8 @@ const Prakriti = () => {
                   </>
                 )}
                 {apiResponse && !isSubmitting && (
-                  <div>
-                    <div style={{ width: "600px", margin: "0 auto" }}>
-                      <h2>Subject Percentages</h2>
-                      <BarChart
-                        dataObject={Object.entries(labeledPercentages).map(
-                          ([name, value]) => ({ name, value })
-                        )}
-                      />
-                    </div>
+                  <div className="flex justify-center items-center flex-col gap-8">
+                    <BarChart dataObject={labeledPercentages}/>
                     <p className="text-xl ">
                       Your Prakriti is: <b>{capitalize(apiResponse)}</b>
                     </p>

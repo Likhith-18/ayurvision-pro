@@ -22,8 +22,8 @@ ChartJS.register(
 );
 
 export const BarChart = ({ dataObject }) => {
-  const labels = Object.keys(dataObject);
-  const values = Object.values(dataObject);
+const labels = ["Vata", "Pitta", "Kapha"];
+const values = labels.map(label => dataObject[label] || 0);
   console.log("Chart data:", dataObject);
   const barColors = ["#FF6384", "#36A2EB", "#FFCE56"]; // Kapha, Pitta, Vata
 
@@ -31,7 +31,7 @@ export const BarChart = ({ dataObject }) => {
     labels,
     datasets: [
       {
-        label: "Percentage",
+        label: "",
         data: values,
         backgroundColor: barColors,
         borderColor: "#ddd",
@@ -55,7 +55,7 @@ export const BarChart = ({ dataObject }) => {
       },
       title: {
         display: true,
-        text: "Prakriti Composition",
+        text: "Vikrithi Composition",
         font: {
           size: 20,
         },
@@ -67,21 +67,14 @@ export const BarChart = ({ dataObject }) => {
         max: 100,
         ticks: {
           stepSize: 20,
-          callback: (value) => `${value}%`,
         },
         title: {
           display: true,
           text: "Percentage",
         },
       },
-      x: {
-        title: {
-          display: true,
-          text: "Doshas",
-        },
-      },
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return <Bar data={data} options={options} height={250} />;
 };
