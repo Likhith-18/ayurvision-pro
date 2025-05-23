@@ -194,6 +194,7 @@ const Prakriti = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiResponse, setApiResponse] = useState("");
   const [labeledPercentages, setLabeledPercentages] = useState({});
+  const [dominantVikrithi, setDominantVikrithi] = useState("");
 
   const mappings = {
     2: [2, 1, 0],
@@ -543,6 +544,7 @@ const Prakriti = () => {
     console.log(labeledPercentages);
     console.log(prakritiArray);
     console.log(vikritiArray);
+    setDominantVikrithi(doshaMap[maxKey]);
     let res = "";
     axios
       // .post("https://ayurvision-server.onrender.com/predict", {
@@ -636,9 +638,14 @@ const Prakriti = () => {
                     />
                   </>
                 )}
-                {apiResponse && !isSubmitting && (
+                  {apiResponse && !isSubmitting && (
                   <div className="flex justify-center items-center flex-col gap-8">
                     <BarChart dataObject={labeledPercentages}/>
+                      {dominantVikrithi && (
+                      <p className="text-xl">
+                        Dominant Vikrithi: <b>{capitalize(dominantVikrithi)}</b>
+                      </p>
+                    )}
                     <p className="text-xl ">
                       Your Prakriti is: <b>{capitalize(apiResponse)}</b>
                     </p>
