@@ -3,7 +3,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Prakriti from "./Prakriti";
 import ImagePredict from "./ImagePredict";
-import NearbyDoctorsMap from '../pages/NearbyDoctersMap';
+import NearbyDoctorsMap from "../pages/NearbyDoctersMap";
 
 export default function App() {
   return (
@@ -13,7 +13,7 @@ export default function App() {
           <Route path="/" Component={Home} />
           <Route path="/myform" Component={Prakriti} />
           <Route path="/image-predict" Component={ImagePredict} />
-          <Route path="/findDoctors" Component={NearbyDoctorsMap} />
+          <Route path="/find-doctors" Component={NearbyDoctorsMap} />
         </Routes>
       </div>
     </Router>
