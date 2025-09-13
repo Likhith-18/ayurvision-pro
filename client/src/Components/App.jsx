@@ -11,7 +11,7 @@ export default function App() {
       <div>
         <Routes>
           <Route path="/" Component={Home} />
-          <Route path="/myform" Component={Prakriti} />
+          <Route path="/my-form" Component={Prakriti} />
           <Route path="/image-predict" Component={ImagePredict} />
           <Route path="/find-doctors" Component={NearbyDoctorsMap} />
         </Routes>

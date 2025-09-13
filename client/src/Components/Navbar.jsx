@@ -31,20 +31,20 @@ export default function Navbar() {
               </button> */}
             </li>
             <li>
-              <Link className="text-white" to="/MyForm">
+              <Link className="text-white" to="/my-form">
                 Prakriti
               </Link>
             </li>
             <li>
-              <Link className="text-white" to="/findDoctors">
+              <Link className="text-white" to="/find-doctors">
                 Doctors
               </Link>
             </li>
             <li>
-            <Link className="text-white" to="/image-predict">
-              Identify
-            </Link>
-          </li>
+              <Link className="text-white" to="/image-predict">
+                Identify
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
